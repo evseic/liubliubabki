@@ -120,25 +120,6 @@
             border-color: rgba(250, 204, 21, 0.5);
             outline: none;
         }
-
-        /* Hero Slider Styles */
-        .slide {
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .slide.active {
-            opacity: 1;
-        }
-
-        /* Stats Styles */
-        .stat-number {
-            font-variant-numeric: tabular-nums;
-        }
     </style>
 </head>
 <body class="min-h-screen bg-dark-900 selection:bg-gold-500 selection:text-dark-900">
@@ -163,46 +144,40 @@
             </div>
         </div>
         
-        <!-- Right Slider & Stats -->
-        <div class="flex-1 h-[60vh] md:h-full relative overflow-hidden shrink-0 flex flex-col">
-            <!-- Image Slider Container -->
-            <div class="relative flex-1 w-full overflow-hidden">
-                <div id="hero-slider" class="absolute inset-0">
-                    <!-- Placeholder images for earnings dashboard -->
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" alt="Earnings 1" class="slide active">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" alt="Earnings 2" class="slide">
-                    <img src="https://images.unsplash.com/photo-1543286386-713bdd54867e?q=80&w=1200&auto=format&fit=crop" alt="Earnings 3" class="slide">
-                    <img src="https://images.unsplash.com/photo-1554224155-1696413565d3?q=80&w=1200&auto=format&fit=crop" alt="Earnings 4" class="slide">
+        <!-- Right Content Section (Slider + Stats) -->
+        <div class="flex-1 min-h-[50vh] md:h-full relative flex flex-col justify-center items-center bg-dark-900 p-6 md:p-12 overflow-hidden">
+            <!-- Ambient Backdrop -->
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-dark-900 via-dark-900/40 to-transparent z-0"></div>
+
+            <!-- Slider Wrapper -->
+            <div class="relative w-full max-w-lg aspect-[4/3] rounded-[2rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.8)] border border-white/10 z-10 animate-fade-in group hover:border-gold-500/20 transition-colors duration-500">
+                <div id="hero-slider" class="absolute inset-0 w-full h-full">
+                    <img src="img/stat1.png" class="absolute inset-0 w-full h-full object-contain bg-zinc-900/30 transition-opacity duration-1000 opacity-100" alt="Статистика 1">
+                    <img src="img/stat2.png" class="absolute inset-0 w-full h-full object-contain bg-zinc-900/30 transition-opacity duration-1000 opacity-0" alt="Статистика 2">
+                    <img src="img/stat3.png" class="absolute inset-0 w-full h-full object-contain bg-zinc-900/30 transition-opacity duration-1000 opacity-0" alt="Статистика 3">
+                    <img src="img/stat4.png" class="absolute inset-0 w-full h-full object-contain bg-zinc-900/30 transition-opacity duration-1000 opacity-0" alt="Статистика 4">
                 </div>
-                
-                <!-- Overlay gradient for smooth blending with text -->
-                <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-dark-900 via-dark-900/40 to-transparent pointer-events-none"></div>
             </div>
 
-            <!-- Statistics Block -->
-            <div class="relative z-10 bg-dark-900/80 backdrop-blur-md border-t border-white/5 p-6 md:p-8 lg:p-12">
-                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 text-center md:text-left">
-                    <!-- Stat 1 -->
-                    <div class="space-y-1">
-                        <div class="text-3xl lg:text-4xl font-bold text-white tracking-tight">
-                            <span class="stat-number inline-block" data-target="40">0</span>+
-                        </div>
-                        <div class="text-zinc-500 text-xs lg:text-sm font-medium uppercase tracking-wider">моделей с нами</div>
-                    </div>
-                    <!-- Stat 2 -->
-                    <div class="space-y-1">
-                        <div class="text-3xl lg:text-4xl font-bold text-gold-400 tracking-tight">
-                            $<span class="stat-number inline-block" data-target="1500000" data-format="currency">0</span>+
-                        </div>
-                        <div class="text-zinc-500 text-xs lg:text-sm font-medium uppercase tracking-wider">заработано моделями</div>
-                    </div>
-                    <!-- Stat 3 -->
-                    <div class="space-y-1">
-                        <div class="text-3xl lg:text-4xl font-bold text-white tracking-tight">
-                            <span class="stat-number inline-block" data-target="4">0</span>
-                        </div>
-                        <div class="text-zinc-500 text-xs lg:text-sm font-medium uppercase tracking-wider">года опыта</div>
-                    </div>
+            <!-- Stats Block -->
+            <div class="w-full max-w-lg mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 z-10 px-4">
+                <div class="flex flex-col items-center sm:items-start group">
+                    <span class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-1">
+                        <span class="counter" data-target="40">0</span>+
+                    </span>
+                    <span class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-[0.2em] font-bold text-center sm:text-left">Моделей с нами</span>
+                </div>
+                <div class="flex flex-col items-center sm:items-start group">
+                    <span class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gold-400 to-yellow-600 mb-1">
+                        $<span class="counter" data-target="1.5" data-decimals="1">0</span>M+
+                    </span>
+                    <span class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-[0.2em] font-bold text-center sm:text-left">Заработано</span>
+                </div>
+                <div class="flex flex-col items-center sm:items-start group">
+                    <span class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-1">
+                        <span class="counter" data-target="4">0</span>
+                    </span>
+                    <span class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-[0.2em] font-bold text-center sm:text-left">Года опыта</span>
                 </div>
             </div>
         </div>
@@ -399,91 +374,69 @@
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
-
-        // Initialization
-        window.addEventListener('DOMContentLoaded', () => {
-            initHeroSlider();
-            initCountUp();
+        
+        // Initialize Hero Effects on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initHeroEffects();
         });
 
-        // Hero Slider Logic
-        function initHeroSlider() {
-            const slides = document.querySelectorAll('.slide');
-            let currentSlide = 0;
-            
-            if (slides.length <= 1) return;
+        // Slider and Stats Animation
+        function initHeroEffects() {
+            // Slider Logic
+            let activeSlide = 0;
+            const sliderImages = document.querySelectorAll('#hero-slider img');
+            if (sliderImages.length > 1) {
+                setInterval(() => {
+                    sliderImages[activeSlide].classList.add('opacity-0');
+                    sliderImages[activeSlide].classList.remove('opacity-100');
+                    activeSlide = (activeSlide + 1) % sliderImages.length;
+                    sliderImages[activeSlide].classList.add('opacity-100');
+                    sliderImages[activeSlide].classList.remove('opacity-0');
+                }, 3000);
+            }
 
-            setInterval(() => {
-                slides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].classList.add('active');
-            }, 3000); // 3 seconds rotation
-        }
-
-        // Count-Up Animation Logic
-        function initCountUp() {
-            const counters = document.querySelectorAll('.stat-number');
-            const duration = 2000; // 2 seconds
-            
+            // Count-up Logic
+            const counters = document.querySelectorAll('.counter');
             counters.forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                const isCurrency = counter.getAttribute('data-format') === 'currency';
-                const start = 0;
-                let startTime = null;
+                const target = parseFloat(counter.getAttribute('data-target'));
+                const decimals = parseInt(counter.getAttribute('data-decimals') || '0');
+                const duration = 2000;
+                const startTime = performance.now();
 
-                const animate = (currentTime) => {
-                    if (!startTime) startTime = currentTime;
-                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
                     
                     // Ease out cubic
-                    const easedProgress = 1 - Math.pow(1 - progress, 3);
-                    const currentVal = Math.floor(easedProgress * (target - start) + start);
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    const current = easeProgress * target;
                     
-                    if (isCurrency) {
-                        // Format as millions or similar for clarity
-                        if (currentVal >= 1000000) {
-                            counter.textContent = (currentVal / 1000000).toFixed(1) + 'M';
-                        } else {
-                            counter.textContent = currentVal.toLocaleString('en-US');
-                        }
-                    } else {
-                        counter.textContent = currentVal;
-                    }
+                    counter.textContent = current.toFixed(decimals);
 
                     if (progress < 1) {
-                        requestAnimationFrame(animate);
+                        requestAnimationFrame(update);
                     } else {
-                        // Final snap to target with exact formatting
-                        if (isCurrency) {
-                            counter.textContent = (target / 1000000).toFixed(1) + 'M';
-                        } else {
-                            counter.textContent = target;
-                        }
+                        counter.textContent = target.toFixed(decimals);
                     }
-                };
-
-                requestAnimationFrame(animate);
+                }
+                requestAnimationFrame(update);
             });
         }
-        
+
         // Transition from Landing to Quiz
         function startQuizFromLanding() {
             const landing = document.getElementById('landing-view');
             const quizView = document.getElementById('quiz-view');
             
-            // Fade out landing
             landing.classList.remove('view-active');
             landing.classList.add('view-hidden');
             
-            // Wait for fade out, then display quiz logic
             setTimeout(() => {
                 quizView.classList.remove('view-hidden');
                 quizView.classList.add('view-active');
-                
-                // Initialize the quiz flow at step 1
                 currentStep = 1;
                 showStep(1);
-            }, 500); // 500ms matches the transition duration
+            }, 500);
         }
 
         // Navigation Logic
@@ -598,8 +551,6 @@
                 submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
             }
             
-            console.log("Collected Lead Data:", formData);
-            
             try {
                 const { data, error } = await supabaseClient
                     .from('leads')
@@ -614,8 +565,7 @@
                             time_commitment: formData.time || null,
                             reason: formData.reason || null,
                             socials: formData.socials || null,
-                            target_income: formData.income || null,
-                            ready_to_work: formData.ready || null
+                            target_income: formData.income || null
                         }
                     ]);
                 
