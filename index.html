@@ -125,61 +125,70 @@
 <body class="min-h-screen bg-dark-900 selection:bg-gold-500 selection:text-dark-900">
 
     <!-- LANDING VIEW -->
-    <div id="landing-view" class="fixed inset-0 z-50 flex flex-col md:flex-row bg-dark-900 view-active">
-        <!-- Left Content -->
-        <div class="flex-1 flex flex-col justify-center px-6 py-12 md:px-12 lg:px-24 xl:px-32 relative z-10">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight">
-                Хочешь зарабатывать <br class="hidden xl:block">
-                от <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 to-yellow-200">2000$ в месяц</span>, <br class="hidden lg:block">
-                снимая контент из любой точки мира?
-            </h1>
-            <p class="text-zinc-400 text-lg md:text-xl mb-10 max-w-xl">
-                Присоединяйся к нам — мы помогаем моделям расти и зарабатывать больше
-            </p>
-            <div>
+    <div id="landing-view" class="min-h-screen flex flex-col-reverse md:flex-row transition-all duration-500 view-active overflow-x-hidden">
+        
+        <!-- Ambient Background for the whole landing -->
+        <div class="fixed inset-0 pointer-events-none z-0">
+            <div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-gold-500/5 rounded-full blur-[120px]"></div>
+        </div>
+
+        <!-- Left Content Section -->
+        <div class="flex-1 flex flex-col justify-center px-6 py-10 md:p-20 z-10">
+            <div class="animate-fade-in" style="animation-delay: 100ms;">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-400 text-xs font-bold tracking-widest uppercase mb-6">
+                    <span class="w-2 h-2 bg-gold-400 rounded-full animate-pulse"></span>
+                    Onlyfans Management
+                </div>
+                <h1 class="text-3xl md:text-7xl font-bold leading-[1.1] mb-6 tracking-tight">
+                    Твой путь к <br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-gold-300 via-gold-500 to-yellow-600">
+                        финансовой свободе
+                    </span>
+                </h1>
+                <p class="text-lg md:text-xl text-zinc-400 mb-10 max-w-xl leading-relaxed">
+                    Мы берем на себя всё: от продвижения и чаттинга до полной упаковки твоего аккаунта. Тебе остается только делать контент и забирать прибыль.
+                </p>
                 <button onclick="startQuizFromLanding()" class="w-full md:w-auto py-5 px-12 bg-gradient-to-r from-gold-400 to-yellow-500 text-dark-900 rounded-xl font-bold text-xl md:text-2xl transition-transform hover:scale-[1.03] active:scale-[0.98] shadow-xl shadow-gold-500/20">
                     Начать
                 </button>
-                <p class="mt-4 text-sm text-zinc-500 font-medium md:ml-4 text-center md:text-left">Займет несколько минут</p>
+                <p class="mt-4 text-sm text-zinc-500 font-medium md:ml-4 text-center md:text-left uppercase tracking-widest">Займет 2 минуты</p>
             </div>
         </div>
         
         <!-- Right Content Section (Slider + Stats) -->
-        <div class="flex-1 min-h-[500px] md:h-full relative flex flex-col justify-center items-center bg-dark-900 p-4 md:p-12 overflow-hidden">
+        <div class="flex-1 min-h-[350px] md:min-h-screen relative flex flex-col justify-center items-center bg-dark-900/50 p-4 md:p-12 z-10">
             <!-- Ambient Backdrop -->
-            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-dark-900 via-dark-900/20 to-transparent z-0"></div>
+            <div class="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-dark-900 via-dark-900/40 to-transparent z-0"></div>
 
             <!-- Slider Wrapper -->
-            <div class="relative w-full max-w-2xl aspect-[1.4/1] md:aspect-[1.5/1] rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_-20px_rgba(0,0,0,0.9)] border border-white/10 z-10 animate-fade-in group hover:border-gold-500/30 transition-all duration-700 bg-zinc-950">
+            <div class="relative w-full max-w-2xl aspect-[1.4/1] md:aspect-[1.5/1] rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_-20px_rgba(0,0,0,0.9)] border border-white/10 z-10 animate-fade-in group hover:border-gold-500/30 transition-all duration-700 bg-zinc-950">
                 <div id="hero-slider" class="absolute inset-0 w-full h-full">
                     <img src="img/stat1.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 opacity-100" alt="Статистика 1">
                     <img src="img/stat2.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 opacity-0" alt="Статистика 2">
                     <img src="img/stat3.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 opacity-0" alt="Статистика 3">
                     <img src="img/stat4.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 opacity-0" alt="Статистика 4">
                 </div>
-                
-                <!-- Overlay Gradient removed to not obscure details -->
             </div>
 
             <!-- Stats Block -->
-            <div class="w-full max-w-2xl mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12 z-10 px-6">
+            <div class="w-full max-w-2xl mt-8 md:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-12 z-10 px-6">
                 <div class="flex flex-col items-center group">
-                    <span class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-2">
+                    <span class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-1 md:mb-2">
                         40+
                     </span>
-                    <span class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-[0.25em] font-bold text-center">Моделей с нами</span>
+                    <span class="text-[9px] md:text-xs text-zinc-500 uppercase tracking-[0.25em] font-bold text-center">Моделей с нами</span>
                 </div>
                 <div class="flex flex-col items-center group">
-                    <span class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gold-400 to-yellow-600 mb-2">
+                    <span class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gold-400 to-yellow-600 mb-1 md:mb-2">
                         $1.5M+
                     </span>
-                    <span class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-[0.25em] font-bold text-center">Заработано</span>
+                    <span class="text-[9px] md:text-xs text-zinc-500 uppercase tracking-[0.25em] font-bold text-center">Заработано</span>
                 </div>
                 <div class="flex flex-col items-center group">
-                    <span class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-2">
+                    <span class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-1 md:mb-2">
                         4
                     </span>
-                    <span class="text-[10px] md:text-xs text-zinc-500 uppercase tracking-[0.25em] font-bold text-center">Года опыта</span>
+                    <span class="text-[9px] md:text-xs text-zinc-500 uppercase tracking-[0.25em] font-bold text-center">Года опыта</span>
                 </div>
             </div>
         </div>
