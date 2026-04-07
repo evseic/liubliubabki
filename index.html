@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>liubliubabki.com | Начни зарабатывать</title>
+    <meta name="description" content="Ответь на несколько вопросов и начни зарабатывать с премиальным агентством liubliubabki.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#09090b', // ultra dark
+                            800: '#18181b', // card bg
+                            700: '#27272a', // input/hover
+                        },
+                        gold: {
+                            400: '#facc15',
+                            500: '#eab308',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #09090b;
+            color: #fafafa;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* View transitions */
+        .view-hidden {
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            position: absolute;
+            inset: 0;
+        }
+        .view-active {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            position: relative;
+        }
+
+        /* Glassmorphism effects */
+        .glass-card {
+            background: rgba(24, 24, 27, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Standardize step visibility */
+        .step[data-active="false"] {
+            display: none;
+        }
+        
+        .step[data-active="true"] {
+            display: flex;
+            animation: slide-up 0.5s forwards;
+        }
+
+        /* Custom options styling */
+        .quiz-option {
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            border-color: rgba(250, 204, 21, 0.5);
+            background: rgba(39, 39, 42, 0.8);
+        }
+        
+        .quiz-option:active {
+            transform: translateY(0);
+        }
+
+        /* Beautiful gradient inputs */
+        .input-glow:focus {
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
+            border-color: rgba(250, 204, 21, 0.5);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-dark-900 selection:bg-gold-500 selection:text-dark-900">
+
+    <!-- LANDING VIEW -->
+    <div id="landing-view" class="fixed inset-0 z-50 flex flex-col md:flex-row bg-dark-900 view-active">
+        <!-- Left Content -->
+        <div class="flex-1 flex flex-col justify-center px-6 py-12 md:px-12 lg:px-24 xl:px-32 relative z-10">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight tracking-tight">
+                Хочешь зарабатывать <br class="hidden xl:block">
+                от <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 to-yellow-200">2000$ в месяц</span>, <br class="hidden lg:block">
+                снимая контент из любой точки мира?
+            </h1>
+            <p class="text-zinc-400 text-lg md:text-xl mb-10 max-w-xl">
+                Присоединяйся к нам — мы помогаем моделям расти и зарабатывать больше
+            </p>
+            <div>
+                <button onclick="startQuizFromLanding()" class="w-full md:w-auto py-5 px-12 bg-gradient-to-r from-gold-400 to-yellow-500 text-dark-900 rounded-xl font-bold text-xl md:text-2xl transition-transform hover:scale-[1.03] active:scale-[0.98] shadow-xl shadow-gold-500/20">
+                    Начать
+                </button>
+                <p class="mt-4 text-sm text-zinc-500 font-medium md:ml-4 text-center md:text-left">Займет несколько минут</p>
+            </div>
+        </div>
+        
+        <!-- Right Image -->
+        <div class="flex-1 h-[45vh] md:h-full relative overflow-hidden shrink-0 flex items-end md:items-center">
+            <!-- Modern model stock placeholder -->
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1920&auto=format&fit=crop" 
+                 alt="Model" class="absolute inset-0 w-full h-full object-cover object-top md:object-center">
+            
+            <!-- Mobile fade gradient (bottom to top) & Desktop fade gradient (left to right) -->
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-dark-900 via-dark-900/60 md:via-dark-900/40 to-transparent"></div>
+        </div>
+    </div>
+
+    <!-- QUIZ VIEW (Hidden initially) -->
+    <div id="quiz-view" class="min-h-screen flex flex-col justify-center items-center p-4 relative view-hidden">
+        
+        <!-- Ambient Background Gradients -->
+        <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-gold-500/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-zinc-600/10 rounded-full blur-[100px] animate-pulse-slow" style="animation-delay: 1s;"></div>
+        </div>
+
+        <main class="w-full max-w-lg relative z-10">
+            <!-- Progress Indicator Overlay -->
+            <div id="progress-container" class="mb-6 hidden opacity-0 transition-opacity duration-300">
+                <div class="flex justify-between items-center text-sm text-zinc-400 mb-2 font-medium">
+                    <span id="progress-text">Шаг 1 из 10</span>
+                    <span class="text-gold-400">liubliubabki</span>
+                </div>
+                <div class="h-1.5 w-full bg-dark-700 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-gold-500 to-yellow-300 rounded-full w-0 transition-all duration-500 ease-out"></div>
+                </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="glass-card rounded-3xl p-6 md:p-10 w-full">
+                <form id="quiz-form" onsubmit="return false;">
+                    
+                    <!-- QUESTION 1 -->
+                    <div class="step flex-col" data-step="1" data-active="false">
+                        <h2 class="text-2xl font-bold mb-6">Сколько тебе лет?</h2>
+                        <div class="space-y-3">
+                            <button type="button" onclick="handleSelect('age', '18-20')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">&bull; 18-20 лет</button>
+                            <button type="button" onclick="handleSelect('age', '21-25')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">&bull; 21-25 лет</button>
+                            <button type="button" onclick="handleSelect('age', '26+')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">&bull; 26 и старше</button>
+                        </div>
+                    </div>
+
+                    <!-- QUESTION 2 -->
+                    <div class="step flex-col" data-step="2" data-active="false">
+                        <h2 class="text-2xl font-bold mb-6">Где ты проживаешь в настоящее время?</h2>
+                        <div class="space-y-3">
+                            <button type="button" onclick="handleSelect('location', 'СНГ')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">🌍 СНГ</button>
+                            <button type="button" onclick="handleSelect('location', 'Европа')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">🇪🇺 Европа</button>
+                            <button type="button" onclick="handleSelect('location', 'Азия')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">🌏 Азия</button>
+                            <button type="button" onclick="handleSelect('location', 'Другое')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">✈️ Другое</button>
+                        </div>
+                    </div>
+
+                    <!-- QUESTION 3 -->
+                    <div class="step flex-col" data-step="3" data-active="false">
+                        <h2 class="text-2xl font-bold mb-6">Какой у тебя смартфон?</h2>
+                        <div class="space-y-4">
+                            <input class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600 transition-all font-medium text-lg" 
+                                   type="text" id="phone-input" placeholder="Например, iPhone 15 Pro">
+                            <p id="phone-error" class="text-red-400 text-sm hidden">Пожалуйста, напиши марку телефона</p>
+                            <button type="button" onclick="handleTextInput('phone', 'phone-input', 'phone-error')" class="w-full py-4 px-6 bg-dark-700 hover:bg-dark-600 text-white rounded-xl font-bold text-lg transition-colors border border-white/5">
+                                Далее
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- QUESTION 4 -->
+                    <div class="step flex-col" data-step="4" data-active="false">
+                        <h2 class="text-2xl font-bold mb-6">Есть ли у тебя опыт создания контента?</h2>
+                        <div class="space-y-3">
+                            <button type="button" onclick="handleSelect('experience', 'Да')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">Да, есть</button>
+                            <button type="button" onclick="handleSelect('experience', 'Нет')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">Нет, но хочу научиться</button>
+                        </div>
+                    </div>
+
+                    <!-- QUESTION 5 -->
+                    <div class="step flex-col" data-step="5" data-active="false">
+                        <h2 class="text-2xl font-bold mb-6">Сколько времени готова уделять работе?</h2>
+                        <div class="space-y-3">
+                            <button type="button" onclick="handleSelect('time', '2-4 часа')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">⏳ 2-4 часа в день</button>
+                            <button type="button" onclick="handleSelect('time', '4-8 часов')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">⏱️ 4-8 часов в день</button>
+                            <button type="button" onclick="handleSelect('time', 'Full-time')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">🔥 Full-time (максимум прибыли)</button>
+                        </div>
+                    </div>
+
+                    <!-- QUESTION 6 -->
+                    <div class="step flex-col" data-step="6" data-active="false">
+                        <h2 class="text-2xl font-bold mb-6">Почему хочешь начать?</h2>
+                        <div class="space-y-3">
+                            <button type="button" onclick="handleSelect('reason', 'Деньги')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">💸 Высокий доход</button>
+                            <button type="button" onclick="handleSelect('reason', 'Свобода')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">🌴 Свобода и независимость</button>
+                            <button type="button" onclick="handleSelect('reason', 'Интересно')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">✨ Просто интересно попробовать</button>
+                        </div>
+                    </div>
+
+                    <!-- QUESTION 7 -->
+                    <div class="step flex-col" data-step="7" data-active="false">
+                        <h2 class="text-2xl font-bold mb-6">Сколько хочешь зарабатывать в месяц?</h2>
+                        <div class="space-y-3">
+                            <button type="button" onclick="handleSelect('income', '1000-5000 $')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">1000-5000 $</button>
+                            <button type="button" onclick="handleSelect('income', '5000-10000 $')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">5000-10000 $</button>
+                            <button type="button" onclick="handleSelect('income', '10000+ $')" class="quiz-option w-full p-4 rounded-xl border border-white/10 bg-dark-700/50 text-left font-medium text-lg">10000+ $ 🚀</button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 8: LEAD FORM -->
+                    <div class="step flex-col" data-step="8" data-active="false">
+                        <div class="text-center mb-6">
+                            <div class="inline-block px-3 py-1 mb-4 rounded-full bg-green-500/10 border border-green-500/20 text-xs font-semibold tracking-wide text-green-400">
+                                Анкета заполнена на 100%
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-bold mb-2">Последний шаг</h2>
+                            <p class="text-zinc-400 text-sm">Оставь свои контакты, и наш менеджер свяжется с тобой в течение 15 минут.</p>
+                        </div>
+                        
+                        <div class="space-y-4 mb-3">
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="name">Имя *</label>
+                                <input class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600 transition-all" 
+                                       type="text" id="name" placeholder="Например, Анна" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="telegram">Твой Telegram / @username *</label>
+                                <input class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600 transition-all" 
+                                       type="text" id="telegram" placeholder="@username" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="other-socials">Другие соц.сети (необязательно)</label>
+                                <input class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600 transition-all" 
+                                       type="text" id="other-socials" placeholder="Ссылка на Instagram/TikTok">
+                            </div>
+                        </div>
+
+                        <label class="flex items-start gap-3 mb-6 cursor-pointer group mt-2">
+                            <div class="relative flex items-center justify-center mt-0.5 shrink-0">
+                                <input type="checkbox" id="cookie-consent" class="hidden peer" required>
+                                <div class="w-5 h-5 border border-white/20 rounded bg-dark-900 peer-checked:bg-gold-500 peer-checked:border-gold-500 transition-colors flex items-center justify-center">
+                                    <svg class="w-3 h-3 text-dark-900 opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                </div>
+                            </div>
+                            <span class="text-xs text-zinc-400 leading-relaxed group-hover:text-zinc-300 transition-colors">Я соглашаюсь на использование файлов cookie и обработку персональных данных *</span>
+                        </label>
+                        
+                        <p id="form-error" class="text-red-400 text-sm mb-4 hidden text-center font-medium">Пожалуйста, заполни все обязательные поля.</p>
+
+                        <button type="button" id="submit-btn" onclick="submitForm()" class="w-full py-4 px-6 bg-gradient-to-r from-gold-400 to-yellow-500 text-dark-900 rounded-xl font-bold text-lg transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-gold-500/20 flex justify-center items-center gap-2">
+                            <span>Отправить заявку</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- SUCCESS SCREEN (Step 9) -->
+                    <div class="step flex-col text-center py-6" data-step="9" data-active="false">
+                        <div class="mx-auto w-20 h-20 bg-green-500/10 border border-green-500/20 rounded-full flex items-center justify-center mb-6">
+                            <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        
+                        <h2 class="text-3xl font-bold mb-4 text-white">Заявка принята!</h2>
+                        <p class="text-zinc-400 text-lg leading-relaxed max-w-[280px] mx-auto">
+                            Спасибо за доверие. Наш менеджер напишет тебе в Telegram в самое ближайшее время.
+                        </p>
+                    </div>
+
+                </form>
+            </div>
+            
+            <!-- Back Navigation -->
+            <div class="mt-6 flex justify-center w-full min-h-[44px]">
+                <button id="back-btn" onclick="prevStep()" class="hidden flex items-center justify-center gap-2 text-zinc-400 hover:text-white transition-colors py-2 px-4 rounded-xl hover:bg-dark-800">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span class="font-medium text-sm">К предыдущему шагу</span>
+                </button>
+            </div>
+
+            <div class="text-center mt-8 opacity-40">
+                <p class="text-xs text-zinc-500 font-medium tracking-wider">© 2026 LIUBLIUBABKI.COM</p>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Supabase Initialization
+        const supabaseUrl = 'https://lntjueljbkuzvykbkvjf.supabase.co';
+        const supabaseKey = 'sb_publishable_6u0O8xuSeVWZT0mlrD2Prg_Cyc1_X8f';
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // State Management
+        let currentStep = 0; // 0 == landing
+        const totalQuizSteps = 7; // Questions 1-7
+        let formData = {};
+
+        // DOM Elements
+        const steps = document.querySelectorAll('.step');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        
+        // Transition from Landing to Quiz
+        function startQuizFromLanding() {
+            const landing = document.getElementById('landing-view');
+            const quizView = document.getElementById('quiz-view');
+            
+            // Fade out landing
+            landing.classList.remove('view-active');
+            landing.classList.add('view-hidden');
+            
+            // Wait for fade out, then display quiz logic
+            setTimeout(() => {
+                quizView.classList.remove('view-hidden');
+                quizView.classList.add('view-active');
+                
+                // Initialize the quiz flow at step 1
+                currentStep = 1;
+                showStep(1);
+            }, 500); // 500ms matches the transition duration
+        }
+
+        // Navigation Logic
+        function showStep(stepIndex) {
+            steps.forEach(step => {
+                step.setAttribute('data-active', 'false');
+            });
+            
+            const targetStep = document.querySelector(`.step[data-step="${stepIndex}"]`);
+            if (targetStep) {
+                targetStep.setAttribute('data-active', 'true');
+            }
+            
+            updateProgress(stepIndex);
+        }
+
+        function prevStep() {
+            if (currentStep > 1 && currentStep <= totalQuizSteps + 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalQuizSteps + 2 && currentStep > 0) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        }
+
+        function handleSelect(field, value) {
+            formData[field] = value;
+            setTimeout(() => nextStep(), 250);
+        }
+
+        function handleTextInput(field, inputId, errorId) {
+            const inputEl = document.getElementById(inputId);
+            const errEl = document.getElementById(errorId);
+            if(!inputEl.value.trim()) {
+                errEl.classList.remove('hidden');
+                return;
+            }
+            errEl.classList.add('hidden');
+            formData[field] = inputEl.value.trim();
+            nextStep();
+        }
+
+        function updateProgress(step) {
+            const backBtn = document.getElementById('back-btn');
+            if(backBtn) {
+                if (step > 1 && step <= totalQuizSteps + 1) {
+                    backBtn.classList.remove('hidden');
+                    backBtn.classList.add('flex');
+                } else {
+                    backBtn.classList.add('hidden');
+                    backBtn.classList.remove('flex');
+                }
+            }
+
+            if (step > 0 && step <= totalQuizSteps + 1) {
+                progressContainer.classList.remove('hidden');
+                setTimeout(() => progressContainer.classList.remove('opacity-0'), 10);
+                progressContainer.classList.add('opacity-100');
+                
+                const progressPercentage = (step / (totalQuizSteps + 1)) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+                
+                if(step <= totalQuizSteps) {
+                     progressText.textContent = `Шаг ${step} из ${totalQuizSteps}`;
+                } else if (step === totalQuizSteps + 1) {
+                     progressText.textContent = `Финальный шаг`;
+                }
+            } else {
+                progressContainer.classList.remove('opacity-100');
+                progressContainer.classList.add('opacity-0');
+                setTimeout(() => progressContainer.classList.add('hidden'), 300);
+            }
+        }
+
+        async function submitForm() {
+            const nameInput = document.getElementById('name');
+            const tgInput = document.getElementById('telegram');
+            const errorMsg = document.getElementById('form-error');
+            const submitBtn = document.getElementById('submit-btn');
+            const otherSocials = document.getElementById('other-socials');
+            const cookieConsent = document.getElementById('cookie-consent');
+            
+            if(!nameInput.value.trim() || !tgInput.value.trim() || !cookieConsent.checked) {
+                if(!cookieConsent.checked) {
+                    errorMsg.textContent = "Необходимо согласие на обработку данных (поставьте галочку).";
+                } else {
+                    errorMsg.textContent = "Пожалуйста, заполни все обязательные поля.";
+                }
+                errorMsg.classList.remove('hidden');
+                
+                const formCard = document.querySelector('.glass-card');
+                formCard.style.transform = 'translateX(-5px)';
+                setTimeout(() => formCard.style.transform = 'translateX(5px)', 100);
+                setTimeout(() => formCard.style.transform = 'translateX(-5px)', 200);
+                setTimeout(() => formCard.style.transform = 'translateX(0)', 300);
+                return;
+            }
+            
+            errorMsg.classList.add('hidden');
+            formData['name'] = nameInput.value;
+            formData['telegram'] = tgInput.value;
+            formData['socials'] = otherSocials.value.trim() || null;
+            
+            if(submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span>Отправка...</span>';
+                submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+            }
+            
+            console.log("Collected Lead Data:", formData);
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('leads')
+                    .insert([
+                        { 
+                            name: formData.name, 
+                            telegram: formData.telegram,
+                            age: formData.age || null,
+                            location: formData.location || null,
+                            phone_type: formData.phone || null,
+                            experience: formData.experience || null,
+                            time_commitment: formData.time || null,
+                            reason: formData.reason || null,
+                            socials: formData.socials || null,
+                            target_income: formData.income || null,
+                            ready_to_work: formData.ready || null
+                        }
+                    ]);
+                
+                if (error) {
+                    console.error("Supabase Error Full:", error);
+                    errorMsg.textContent = "Ошибка: " + (error.message || "Не удалось отправить заявку. Проверьте соединение.");
+                    errorMsg.classList.remove('hidden');
+                    if(submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<span>Отправить заявку</span><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>';
+                        submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                    }
+                    return;
+                }
+                
+                nextStep();
+                
+            } catch (err) {
+                console.error("Fetch Error:", err);
+            }
+        }
+    </script>
+</body>
+</html>
