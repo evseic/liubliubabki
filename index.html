@@ -120,12 +120,22 @@
             border-color: rgba(250, 204, 21, 0.5);
             outline: none;
         }
+        
+        .no-scroll {
+            overflow: hidden;
+            height: 100dvh;
+        }
+
+        .scroll-y {
+            overflow-y: auto;
+            max-height: 100dvh;
+        }
     </style>
 </head>
-<body class="min-h-screen bg-dark-900 selection:bg-gold-500 selection:text-dark-900">
+<body class="bg-dark-900 selection:bg-gold-500 selection:text-dark-900 no-scroll">
 
     <!-- LANDING VIEW -->
-    <div id="landing-view" class="h-screen flex flex-col md:flex-row bg-dark-900 view-active relative overflow-hidden">
+    <div id="landing-view" class="fixed inset-0 w-full h-[100dvh] flex flex-col md:flex-row bg-dark-900 view-active z-50 overflow-hidden">
         
         <!-- Ambient background for both sides -->
         <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-50">
@@ -194,7 +204,7 @@
     </div>
 
     <!-- QUIZ VIEW (Hidden initially) -->
-    <div id="quiz-view" class="min-h-screen flex flex-col justify-center items-center p-4 relative view-hidden">
+    <div id="quiz-view" class="fixed inset-0 w-full h-[100dvh] flex flex-col items-center p-4 bg-dark-900 z-50 view-hidden overflow-y-auto">
         
         <!-- Ambient Background Gradients -->
         <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -202,7 +212,7 @@
             <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-zinc-600/10 rounded-full blur-[100px] animate-pulse-slow" style="animation-delay: 1s;"></div>
         </div>
 
-        <main class="w-full max-w-lg relative z-10">
+        <main class="w-full max-w-lg relative z-10 my-auto py-8">
             <!-- Progress Indicator Overlay -->
             <div id="progress-container" class="mb-6 hidden opacity-0 transition-opacity duration-300">
                 <div class="flex justify-between items-center text-sm text-zinc-400 mb-2 font-medium">
