@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>liubliubabki.com | Admin</title>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        dark: {  900: '#09090b', 800: '#18181b', 700: '#27272a' },
+                        gold: {  400: '#facc15', 500: '#eab308' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { background-color: #09090b; color: #fafafa; }
+        .glass-card {
+            background: rgba(24, 24, 27, 0.65);
+            backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .input-glow:focus { box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2); border-color: rgba(250, 204, 21, 0.5); outline: none; }
+        
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #18181b; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-corner { background: #18181b; }
+    </style>
+</head>
+<body class="min-h-screen bg-dark-900 selection:bg-gold-500 selection:text-dark-900">
+
+    <!-- LOGIN VIEW -->
+    <div id="login-view" class="min-h-screen flex items-center justify-center p-4">
+        
+        <!-- Ambient Background Gradients -->
+        <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+            <div class="absolute top-[20%] left-[-10%] w-[40%] h-[40%] bg-gold-500/5 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-zinc-600/5 rounded-full blur-[100px]"></div>
+        </div>
+
+        <div class="glass-card rounded-3xl p-8 w-full max-w-md relative z-10">
+            <h2 class="text-3xl font-bold mb-6 text-center text-transparent bg-clip-text bg-gradient-to-r from-gold-400 to-yellow-200 tracking-tight">Панель управления</h2>
+            
+            <form onsubmit="handleAuth(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="email">Email</label>
+                    <input type="email" id="email" class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="password">Пароль</label>
+                    <input type="password" id="password" class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600" required>
+                </div>
+                
+                <p id="auth-error" class="text-red-400 text-sm hidden text-center font-medium"></p>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" id="btn-login" class="flex-1 py-3 px-4 bg-gradient-to-r from-gold-400 to-yellow-500 text-dark-900 rounded-xl font-bold hover:scale-[1.02] transition-transform shadow-lg shadow-gold-500/20">Войти</button>
+                    <!-- Small signup button for initial setup -->
+                    <button type="button" id="btn-signup" onclick="handleSignUp()" class="flex-1 py-3 px-4 bg-dark-700 text-white rounded-xl font-bold hover:bg-dark-800 transition">Регистрация</button>
+                </div>
+                <p class="text-xs text-zinc-500 text-center mt-4">Введите почту и пароль и нажмите "Регистрация" (только для первого раза).</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboard-view" class="hidden min-h-screen flex-col p-4 md:p-8 relative z-10 max-w-[1600px] mx-auto">
+        <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-6 bg-dark-800/80 p-6 rounded-2xl border border-white/5 shadow-lg">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Список заявок (Leads)</h1>
+                <p class="text-zinc-400 mt-1">Все заполненные анкеты в реальном времени</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="fetchLeads()" class="py-2 px-4 bg-dark-700 text-white border border-white/10 rounded-xl font-medium hover:bg-dark-600 transition text-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    Обновить
+                </button>
+                <button onclick="handleSignOut()" class="py-2 px-4 bg-red-500/10 text-red-400 border border-red-500/20 rounded-xl font-medium hover:bg-red-500/20 transition text-sm">Выйти</button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto bg-dark-800/80 rounded-2xl border border-white/5 shadow-lg flex-1">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+                <thead class="text-xs text-zinc-400 uppercase bg-dark-900/80 border-b border-white/5 sticky top-0">
+                    <tr>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Дата</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Имя</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Telegram</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Готова?</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Доход</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Соцсети</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Возраст</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Регион</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Опыт</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">Время</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide max-w-[200px]">Причина</th>
+                    </tr>
+                </thead>
+                <tbody id="leads-body" class="divide-y divide-white/5">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+            <p id="loading-text" class="text-center text-zinc-500 my-12 animate-pulse hidden">Загрузка данных...</p>
+        </div>
+    </div>
+
+    <script>
+        const supabaseUrl = 'https://lntjueljbkuzvykbkvjf.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxudGp1ZWxqYmt1enZ5a2JrdmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1ODAzNDUsImV4cCI6MjA5MTE1NjM0NX0.-hZzkzKtBl3xpA-A3rHGFe4me3uExxCrDrH9o5C9g40';
+        const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        const loginView = document.getElementById('login-view');
+        const dashboardView = document.getElementById('dashboard-view');
+        const leadsBody = document.getElementById('leads-body');
+        const errorMsg = document.getElementById('auth-error');
+        const loadingText = document.getElementById('loading-text');
+
+        // Initial Auth check
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Listen for Auth changes dynamically
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        });
+
+        async function handleAuth(e) {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                errorMsg.textContent = error.message;
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        async function handleSignUp() {
+            errorMsg.classList.add('hidden');
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if(!email || !password) {
+                errorMsg.textContent = "Сначала заполните Email и Пароль, а затем нажмите Регистрация";
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) {
+                errorMsg.textContent = error.message;
+                errorMsg.classList.remove('hidden');
+            } else {
+                alert("Аккаунт создан! Теперь вы авторизованы.");
+                // Supabase automatically signs in the user if email confirmation is off
+            }
+        }
+
+        async function handleSignOut() {
+            await supabaseClient.auth.signOut();
+        }
+
+        function showDashboard() {
+            loginView.classList.add('hidden');
+            dashboardView.classList.remove('hidden');
+            dashboardView.classList.add('flex');
+            fetchLeads();
+        }
+
+        function showLogin() {
+            loginView.classList.remove('hidden');
+            dashboardView.classList.add('hidden');
+            dashboardView.classList.remove('flex');
+            leadsBody.innerHTML = '';
+        }
+
+        async function fetchLeads() {
+            leadsBody.innerHTML = '';
+            loadingText.classList.remove('hidden');
+            
+            const { data, error } = await supabaseClient
+                .from('leads')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            loadingText.classList.add('hidden');
+            
+            if (error) {
+                console.error("Fetch leads error:", error);
+                leadsBody.innerHTML = `<tr><td colspan="12" class="text-center py-12 text-red-400 font-medium">Ошибка доступа. Убедитесь, что у вас есть права на чтение: ${error.message}</td></tr>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                leadsBody.innerHTML = `<tr><td colspan="12" class="text-center py-12 text-zinc-500 font-medium">Пока нет ни одной заявки</td></tr>`;
+                return;
+            }
+
+            leadsBody.innerHTML = data.map(lead => {
+                const date = new Date(lead.created_at).toLocaleString('ru-RU', { 
+                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
+                });
+                
+                // Telegram parsing format (ensure handle has @ if missing, or handle https links explicitly)
+                const tgHandle = lead.telegram.startsWith('@') ? lead.telegram : lead.telegram.includes('t.me') ? lead.telegram : '@' + lead.telegram;
+                const tgLink = tgHandle.includes('http') ? tgHandle : `https://t.me/${tgHandle.replace('@','')}`;
+
+                return `
+                <tr class="hover:bg-dark-700/40 transition duration-150">
+                    <td class="px-6 py-4 text-zinc-400">${date}</td>
+                    <td class="px-6 py-4 font-bold text-white">${lead.name}</td>
+                    <td class="px-6 py-4 font-medium text-gold-400"><a href="${tgLink}" target="_blank" class="hover:text-gold-300 transition shrink-0 flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.195-.054-.285-.346-.096l-6.405 4.042-2.76-.86c-.6-.182-.613-.604.126-.893l10.785-4.153c.498-.186.94.116.804.896z"/></svg>${tgHandle}</a></td>
+                    <td class="px-6 py-4">${styledBadge(lead.ready_to_work)}</td>
+                    <td class="px-6 py-4 font-medium text-zinc-200">${lead.target_income || '-'}</td>
+                    <td class="px-6 py-4 text-zinc-300 flex flex-col gap-1">${lead.socials ? formatSocials(lead.socials) : '-'}</td>
+                    <td class="px-6 py-4 text-zinc-300">${lead.age || '-'}</td>
+                    <td class="px-6 py-4 text-zinc-300 font-medium">${lead.location || '-'}</td>
+                    <td class="px-6 py-4 text-zinc-300">${lead.experience || '-'}</td>
+                    <td class="px-6 py-4 text-zinc-300 text-xs">${lead.time_commitment || '-'}</td>
+                    <td class="px-6 py-4 text-xs text-zinc-400 max-w-[200px] truncate" title="${lead.reason || ''}">${lead.reason || '-'}</td>
+                </tr>
+            `}).join('');
+        }
+
+        function styledBadge(status) {
+            if(!status) return '<span class="text-zinc-600">-</span>';
+            if(status.includes('Да')) return `<span class="px-2.5 py-1 bg-green-500/10 text-green-400 rounded-lg text-xs font-bold border border-green-500/20 shadow-sm shadow-green-500/10">${status}</span>`;
+            return `<span class="px-2.5 py-1 bg-yellow-500/10 text-yellow-400 rounded-lg text-xs font-bold border border-yellow-500/20 shadow-sm shadow-yellow-500/10">${status}</span>`;
+        }
+        
+        function formatSocials(socials) {
+            if (!socials) return '-';
+            const s = socials.trim();
+            if (s.startsWith('http') || s.startsWith('@')) {
+                return `<span class="text-zinc-300 text-xs font-medium">${s}</span>`;
+            }
+            return `<span class="text-zinc-300 text-xs font-medium">@${s}</span>`;
+        }
+    </script>
+</body>
+</html>
