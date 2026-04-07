@@ -577,33 +577,41 @@
 
         function updateProgress(step) {
             const backBtn = document.getElementById('back-btn');
+            const progressPercentEl = document.getElementById('progress-percent');
+            const stepLabelEl = document.getElementById('progress-step-label');
+
             if(backBtn) {
                 if (step > 1 && step <= totalQuizSteps + 1) {
-                    backBtn.classList.remove('hidden');
-                    backBtn.classList.add('flex');
+                    backBtn.classList.remove('hidden', 'opacity-0');
+                    backBtn.classList.add('flex', 'opacity-100');
                 } else {
-                    backBtn.classList.add('hidden');
-                    backBtn.classList.remove('flex');
+                    backBtn.classList.add('hidden', 'opacity-0');
+                    backBtn.classList.remove('flex', 'opacity-100');
                 }
             }
 
             if (step > 0 && step <= totalQuizSteps + 1) {
                 progressContainer.classList.remove('hidden');
-                setTimeout(() => progressContainer.classList.remove('opacity-0'), 10);
-                progressContainer.classList.add('opacity-100');
+                setTimeout(() => {
+                    progressContainer.classList.remove('opacity-0', '-translate-y-4');
+                    progressContainer.classList.add('opacity-100', 'translate-y-0');
+                }, 10);
                 
-                const progressPercentage = (step / (totalQuizSteps + 1)) * 100;
+                const progressPercentage = Math.round((step / (totalQuizSteps + 1)) * 100);
                 progressBar.style.width = `${progressPercentage}%`;
+                if(progressPercentEl) progressPercentEl.textContent = `${progressPercentage}%`;
                 
                 if(step <= totalQuizSteps) {
                      progressText.textContent = `Шаг ${step} из ${totalQuizSteps}`;
+                     if(stepLabelEl) stepLabelEl.textContent = `Вопрос ${step}`;
                 } else if (step === totalQuizSteps + 1) {
-                     progressText.textContent = `Финальный шаг`;
+                     progressText.textContent = `Почти готово!`;
+                     if(stepLabelEl) stepLabelEl.textContent = `Финальный этап`;
                 }
             } else {
-                progressContainer.classList.remove('opacity-100');
-                progressContainer.classList.add('opacity-0');
-                setTimeout(() => progressContainer.classList.add('hidden'), 300);
+                progressContainer.classList.remove('opacity-100', 'translate-y-0');
+                progressContainer.classList.add('opacity-0', '-translate-y-4');
+                setTimeout(() => progressContainer.classList.add('hidden'), 500);
             }
         }
 
