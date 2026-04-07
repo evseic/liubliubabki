@@ -86,6 +86,10 @@
             overflow-x: hidden;
         }
 
+        @keyframes shimmer {
+            100% { transform: translateX(100%) skewX(-12deg); }
+        }
+
         /* View transitions */
         .view-hidden {
             opacity: 0;
@@ -302,13 +306,21 @@
 
         <main class="w-full max-w-lg relative z-10 my-auto py-8">
             <!-- Progress Indicator Overlay -->
-            <div id="progress-container" class="mb-6 hidden opacity-0 transition-opacity duration-300">
-                <div class="flex justify-between items-center text-sm text-zinc-400 mb-2 font-medium">
-                    <span id="progress-text">Шаг 1 из 10</span>
-                    <span class="text-gold-400">liubliubabki</span>
+            <div id="progress-container" class="mb-8 hidden opacity-0 transition-all duration-500 transform -translate-y-4">
+                <div class="flex justify-between items-end mb-3">
+                    <div class="flex flex-col">
+                        <span id="progress-step-label" class="text-xs uppercase tracking-[0.2em] text-gold-400 font-bold mb-1">Вопрос 1</span>
+                        <span id="progress-text" class="text-xl md:text-2xl font-bold text-white">Шаг 1 из 7</span>
+                    </div>
+                    <div class="text-right">
+                        <span id="progress-percent" class="text-2xl font-black text-zinc-700 tabular-nums">14%</span>
+                    </div>
                 </div>
-                <div class="h-1.5 w-full bg-dark-700 rounded-full overflow-hidden">
-                    <div id="progress-bar" class="h-full bg-gradient-to-r from-gold-500 to-yellow-300 rounded-full w-0 transition-all duration-500 ease-out"></div>
+                <div class="h-2 w-full bg-dark-700/50 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-gold-600 via-gold-400 to-yellow-300 rounded-full w-0 transition-all duration-700 cubic-bezier(0.34, 1.56, 0.64, 1) shadow-[0_0_15px_rgba(250,204,21,0.4)] relative">
+                        <!-- Shining effect -->
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full h-full -skew-x-12 translate-x-[-100%] animate-[shimmer_2s_infinite]"></div>
+                    </div>
                 </div>
             </div>
 
