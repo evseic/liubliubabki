@@ -132,45 +132,45 @@
         }
     </style>
 </head>
-<body class="bg-dark-900 selection:bg-gold-500 selection:text-dark-900 no-scroll">
+<body class="bg-dark-900 selection:bg-gold-500 selection:text-dark-900">
 
     <!-- LANDING VIEW -->
-    <div id="landing-view" class="fixed inset-0 w-full h-[100dvh] flex flex-col md:flex-row bg-dark-900 view-active z-50 overflow-hidden">
+    <div id="landing-view" class="md:fixed md:inset-0 w-full min-h-screen md:h-screen flex flex-col md:flex-row bg-dark-900 view-active z-50 md:overflow-hidden overflow-x-hidden">
         
-        <!-- Ambient background for both sides -->
+        <!-- Ambient background -->
         <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-50">
             <div class="absolute top-[10%] left-[-5%] w-[40%] h-[40%] bg-gold-500/10 rounded-full blur-[120px]"></div>
         </div>
 
         <!-- Left Column (Text & Main CTA) -->
-        <div class="flex-1 flex flex-col justify-center p-6 md:p-24 relative z-10 shrink-0">
+        <div class="flex-none md:flex-1 flex flex-col justify-center p-8 md:p-24 relative z-10">
             <div class="max-w-2xl animate-fade-in-up">
-                <h1 class="text-3xl md:text-6xl font-bold mb-4 md:mb-10 leading-[1.1] tracking-tight text-center md:text-left">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 md:mb-10 leading-[1.1] tracking-tight text-center md:text-left">
                     Хочешь зарабатывать <br class="hidden md:block"> 
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-yellow-200 to-gold-500">от 2000$ в месяц,</span><br class="hidden md:block">
                     снимая контент?
                 </h1>
                 
-                <p class="text-base md:text-xl text-zinc-400 mb-6 md:mb-14 leading-relaxed max-w-xl text-center md:text-left">
-                    Присоединяйся к нам — мы помогаем моделям расти и зарабатывать больше.
+                <p class="text-lg md:text-xl text-zinc-400 mb-10 md:mb-14 leading-relaxed max-w-xl text-center md:text-left">
+                    Присоединяйся к нам — мы помогаем моделям расти и зарабатывать больше. Прозрачные условия и полная поддержка.
                 </p>
                 
-                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-4 md:gap-6">
-                    <button onclick="startQuizFromLanding()" class="w-full md:w-auto py-4 md:py-5 px-12 bg-gradient-to-r from-gold-400 to-yellow-500 text-dark-900 rounded-xl font-bold text-lg md:text-2xl transition-transform hover:scale-[1.03] active:scale-[0.98] shadow-xl shadow-gold-500/20">
+                <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-6">
+                    <button onclick="startQuizFromLanding()" class="w-full md:w-auto py-5 px-12 bg-gradient-to-r from-gold-400 to-yellow-500 text-dark-900 rounded-xl font-bold text-xl md:text-2xl transition-transform hover:scale-[1.03] active:scale-[0.98] shadow-xl shadow-gold-500/20">
                         Начать
                     </button>
                     <div class="flex items-center gap-2 text-zinc-500 font-medium">
                         <svg class="w-4 h-4 text-gold-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"></path></svg>
-                        <span class="text-xs md:text-sm">Займет 2 минуты</span>
+                        <span class="text-sm">Займет 2 минуты</span>
                     </div>
                 </div>
             </div>
         </div>
         
         <!-- Right Content Section (Slider + Stats) -->
-        <div class="flex-1 flex flex-col justify-center items-center bg-dark-900/50 p-4 md:p-12 overflow-hidden shrink">
+        <div class="flex-none md:flex-1 flex flex-col justify-center items-center bg-dark-900/50 p-6 md:p-12 overflow-hidden">
             <!-- Slider Wrapper -->
-            <div class="relative w-full max-w-lg md:max-w-2xl aspect-[16/10] md:aspect-[1.5/1] rounded-2xl md:rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/5 z-10 animate-fade-in bg-zinc-950">
+            <div class="relative w-full max-w-2xl aspect-[1.4/1] md:aspect-[1.5/1] rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_-20px_rgba(0,0,0,0.9)] border border-white/10 z-10 animate-fade-in bg-zinc-950">
                 <div id="hero-slider" class="absolute inset-0 w-full h-full">
                     <img src="img/stat1.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 opacity-100" alt="Статистика 1">
                     <img src="img/stat2.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 opacity-0" alt="Статистика 2">
@@ -180,31 +180,31 @@
             </div>
 
             <!-- Stats Block -->
-            <div class="w-full max-w-2xl mt-4 md:mt-12 grid grid-cols-3 gap-2 md:gap-12 z-10 px-2 md:px-6">
+            <div class="w-full max-w-2xl mt-8 md:mt-12 grid grid-cols-3 gap-4 md:gap-12 z-10 px-2 md:px-6 mb-12 md:mb-0">
                 <div class="flex flex-col items-center">
-                    <span class="text-xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-0.5">
+                    <span class="text-2xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-1">
                         40+
                     </span>
-                    <span class="text-[7px] md:text-xs text-zinc-500 uppercase tracking-widest font-bold text-center">Моделей</span>
+                    <span class="text-[8px] md:text-xs text-zinc-500 uppercase tracking-widest font-bold text-center">Моделей</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <span class="text-xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gold-400 to-yellow-600 mb-0.5">
+                    <span class="text-2xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-gold-400 to-yellow-600 mb-1">
                         $1.5M+
                     </span>
-                    <span class="text-[7px] md:text-xs text-zinc-500 uppercase tracking-widest font-bold text-center">Выплаты</span>
+                    <span class="text-[8px] md:text-xs text-zinc-500 uppercase tracking-widest font-bold text-center">Выплаты</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <span class="text-xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-0.5">
+                    <span class="text-2xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 mb-1">
                         4
                     </span>
-                    <span class="text-[7px] md:text-xs text-zinc-500 uppercase tracking-widest font-bold text-center">Года</span>
+                    <span class="text-[8px] md:text-xs text-zinc-500 uppercase tracking-widest font-bold text-center">Года</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- QUIZ VIEW (Hidden initially) -->
-    <div id="quiz-view" class="fixed inset-0 w-full h-[100dvh] flex flex-col items-center p-4 bg-dark-900 z-50 view-hidden overflow-y-auto">
+    <div id="quiz-view" class="fixed inset-0 w-full h-screen flex flex-col items-center p-4 bg-dark-900 z-[60] view-hidden overflow-y-auto">
         
         <!-- Ambient Background Gradients -->
         <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
