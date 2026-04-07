@@ -120,6 +120,25 @@
             border-color: rgba(250, 204, 21, 0.5);
             outline: none;
         }
+
+        /* Hero Slider Styles */
+        .slide {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Stats Styles */
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-dark-900 selection:bg-gold-500 selection:text-dark-900">
@@ -144,14 +163,48 @@
             </div>
         </div>
         
-        <!-- Right Image -->
-        <div class="flex-1 h-[45vh] md:h-full relative overflow-hidden shrink-0 flex items-end md:items-center">
-            <!-- Modern model stock placeholder -->
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1920&auto=format&fit=crop" 
-                 alt="Model" class="absolute inset-0 w-full h-full object-cover object-top md:object-center">
-            
-            <!-- Mobile fade gradient (bottom to top) & Desktop fade gradient (left to right) -->
-            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-dark-900 via-dark-900/60 md:via-dark-900/40 to-transparent"></div>
+        <!-- Right Slider & Stats -->
+        <div class="flex-1 h-[60vh] md:h-full relative overflow-hidden shrink-0 flex flex-col">
+            <!-- Image Slider Container -->
+            <div class="relative flex-1 w-full overflow-hidden">
+                <div id="hero-slider" class="absolute inset-0">
+                    <!-- Placeholder images for earnings dashboard -->
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop" alt="Earnings 1" class="slide active">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop" alt="Earnings 2" class="slide">
+                    <img src="https://images.unsplash.com/photo-1543286386-713bdd54867e?q=80&w=1200&auto=format&fit=crop" alt="Earnings 3" class="slide">
+                    <img src="https://images.unsplash.com/photo-1554224155-1696413565d3?q=80&w=1200&auto=format&fit=crop" alt="Earnings 4" class="slide">
+                </div>
+                
+                <!-- Overlay gradient for smooth blending with text -->
+                <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-dark-900 via-dark-900/40 to-transparent pointer-events-none"></div>
+            </div>
+
+            <!-- Statistics Block -->
+            <div class="relative z-10 bg-dark-900/80 backdrop-blur-md border-t border-white/5 p-6 md:p-8 lg:p-12">
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 text-center md:text-left">
+                    <!-- Stat 1 -->
+                    <div class="space-y-1">
+                        <div class="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+                            <span class="stat-number inline-block" data-target="40">0</span>+
+                        </div>
+                        <div class="text-zinc-500 text-xs lg:text-sm font-medium uppercase tracking-wider">моделей с нами</div>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="space-y-1">
+                        <div class="text-3xl lg:text-4xl font-bold text-gold-400 tracking-tight">
+                            $<span class="stat-number inline-block" data-target="1500000" data-format="currency">0</span>+
+                        </div>
+                        <div class="text-zinc-500 text-xs lg:text-sm font-medium uppercase tracking-wider">заработано моделями</div>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="space-y-1">
+                        <div class="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+                            <span class="stat-number inline-block" data-target="4">0</span>
+                        </div>
+                        <div class="text-zinc-500 text-xs lg:text-sm font-medium uppercase tracking-wider">года опыта</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -346,6 +399,72 @@
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            initHeroSlider();
+            initCountUp();
+        });
+
+        // Hero Slider Logic
+        function initHeroSlider() {
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+            
+            if (slides.length <= 1) return;
+
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }, 3000); // 3 seconds rotation
+        }
+
+        // Count-Up Animation Logic
+        function initCountUp() {
+            const counters = document.querySelectorAll('.stat-number');
+            const duration = 2000; // 2 seconds
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const isCurrency = counter.getAttribute('data-format') === 'currency';
+                const start = 0;
+                let startTime = null;
+
+                const animate = (currentTime) => {
+                    if (!startTime) startTime = currentTime;
+                    const progress = Math.min((currentTime - startTime) / duration, 1);
+                    
+                    // Ease out cubic
+                    const easedProgress = 1 - Math.pow(1 - progress, 3);
+                    const currentVal = Math.floor(easedProgress * (target - start) + start);
+                    
+                    if (isCurrency) {
+                        // Format as millions or similar for clarity
+                        if (currentVal >= 1000000) {
+                            counter.textContent = (currentVal / 1000000).toFixed(1) + 'M';
+                        } else {
+                            counter.textContent = currentVal.toLocaleString('en-US');
+                        }
+                    } else {
+                        counter.textContent = currentVal;
+                    }
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // Final snap to target with exact formatting
+                        if (isCurrency) {
+                            counter.textContent = (target / 1000000).toFixed(1) + 'M';
+                        } else {
+                            counter.textContent = target;
+                        }
+                    }
+                };
+
+                requestAnimationFrame(animate);
+            });
+        }
         
         // Transition from Landing to Quiz
         function startQuizFromLanding() {
