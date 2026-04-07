@@ -12,6 +12,14 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="L-Admin">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    
     <script>
         tailwind.config = {
             theme: {
@@ -84,7 +92,11 @@
                 <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Список заявок (Leads)</h1>
                 <p class="text-zinc-400 mt-1">Все заполненные анкеты в реальном времени</p>
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+                <button id="push-btn" onclick="subscribePush()" class="hidden py-2 px-4 bg-gold-500/10 text-gold-400 border border-gold-500/20 rounded-xl font-medium hover:bg-gold-500/20 transition text-sm flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                    Включить уведомления
+                </button>
                 <button onclick="fetchLeads()" class="py-2 px-4 bg-dark-700 text-white border border-white/10 rounded-xl font-medium hover:bg-dark-600 transition text-sm flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     Обновить
@@ -245,6 +257,47 @@
                     <td class="px-6 py-4 text-xs text-zinc-400 max-w-[200px] truncate" title="${lead.reason || ''}">${lead.reason || '-'}</td>
                 </tr>
             `}).join('');
+        }
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    console.log('SW Registered!', reg);
+                    checkPushStatus(reg);
+                }).catch(err => console.log('SW Registration failed', err));
+            });
+        }
+
+        async function checkPushStatus(reg) {
+            const pushBtn = document.getElementById('push-btn');
+            if (!('PushManager' in window)) return;
+            
+            const subscription = await reg.pushManager.getSubscription();
+            if (!subscription) {
+                pushBtn.classList.remove('hidden');
+            }
+        }
+
+        async function subscribePush() {
+            const reg = await navigator.serviceWorker.ready;
+            const pushBtn = document.getElementById('push-btn');
+            
+            // This is a placeholder for OneSignal or VAPID logic
+            // Since we need a backend/provider, we'll suggest OneSignal here
+            alert("Для iPhone (iOS 16.4+) добавьте сайт на 'Главный экран', затем откройте его и разрешите уведомления.\n\nВ следующем обновлении мы добавим полную поддержку OneSignal/Telegram.");
+            
+            // Local notification test
+            if (Notification.permission === 'default') {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    new Notification("Уведомления включены!", {
+                        body: "Вы будете получать сообщения о новых заявках.",
+                        icon: "app_icon_512.png"
+                    });
+                    pushBtn.classList.add('hidden');
+                }
+            }
         }
 
         function styledBadge(status) {
