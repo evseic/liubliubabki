@@ -118,6 +118,7 @@
                         <th class="px-6 py-4 font-semibold tracking-wide">Возраст</th>
                         <th class="px-6 py-4 font-semibold tracking-wide">Регион</th>
                         <th class="px-6 py-4 font-semibold tracking-wide">Опыт</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide">English</th>
                         <th class="px-6 py-4 font-semibold tracking-wide">Время</th>
                         <th class="px-6 py-4 font-semibold tracking-wide max-w-[200px]">Причина</th>
                     </tr>
@@ -253,6 +254,7 @@
                     <td class="px-6 py-4 text-zinc-300">${lead.age || '-'}</td>
                     <td class="px-6 py-4 text-zinc-300 font-medium">${lead.location || '-'}</td>
                     <td class="px-6 py-4 text-zinc-300">${lead.experience || '-'}</td>
+                    <td class="px-6 py-4 text-zinc-300 font-bold text-gold-400/80">${lead.english_level || '-'}</td>
                     <td class="px-6 py-4 text-zinc-300 text-xs">${lead.time_commitment || '-'}</td>
                     <td class="px-6 py-4 text-xs text-zinc-400 max-w-[200px] truncate" title="${lead.reason || ''}">${lead.reason || '-'}</td>
                 </tr>
