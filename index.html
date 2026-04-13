@@ -432,9 +432,14 @@
                                        type="text" id="name" data-i18n="placeholder_name" placeholder="Например, Анна" required>
                             </div>
                             <div>
-                                <label data-i18n="label_telegram" class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="telegram">Твой Telegram / @username *</label>
+                                <label data-i18n="label_whatsapp" class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="whatsapp">WhatsApp *</label>
                                 <input class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600 transition-all" 
-                                       type="text" id="telegram" data-i18n="placeholder_telegram" placeholder="@username" required>
+                                       type="text" id="whatsapp" data-i18n="placeholder_whatsapp" placeholder="WhatsApp" required>
+                            </div>
+                            <div>
+                                <label data-i18n="label_telegram" class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="telegram">Твой Telegram / @username (заполни, если есть)</label>
+                                <input class="input-glow w-full p-4 rounded-xl bg-dark-900 border border-white/10 text-white placeholder-zinc-600 transition-all" 
+                                       type="text" id="telegram" data-i18n="placeholder_telegram" placeholder="@username">
                             </div>
                             <div>
                                 <label data-i18n="label_socials" class="block text-sm font-medium text-zinc-400 mb-1.5 ml-1" for="other-socials">Другие соц.сети (необязательно)</label>
@@ -561,7 +566,9 @@
                 "form_desc": "Leave your details and our manager will contact you within 15 minutes.",
                 "label_name": "Name *",
                 "placeholder_name": "e.g., Anna",
-                "label_telegram": "Your Telegram or WhatsApp / @username *",
+                "label_whatsapp": "WhatsApp *",
+                "placeholder_whatsapp": "WhatsApp number",
+                "label_telegram": "Your Telegram / @username (optional)",
                 "placeholder_telegram": "@username",
                 "label_socials": "Other social media (optional)",
                 "placeholder_socials": "Link to Instagram/TikTok",
@@ -635,7 +642,9 @@
                 "form_desc": "Deja tus datos y nuestro manager se pondrá en contacto contigo en 15 minutos.",
                 "label_name": "Nombre *",
                 "placeholder_name": "Por ejemplo, Ana",
-                "label_telegram": "Tu Telegram o WhatsApp / @usuario *",
+                "label_whatsapp": "WhatsApp *",
+                "placeholder_whatsapp": "Número de WhatsApp",
+                "label_telegram": "Tu Telegram / @usuario (opcional)",
                 "placeholder_telegram": "@usuario",
                 "label_socials": "Otras redes sociales (opcional)",
                 "placeholder_socials": "Enlace a Instagram/TikTok",
@@ -944,9 +953,7 @@
             if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
             
             // Build the caption text matching the exact requested structure
-            const text = `Новая заявка! / New Lead
-            
-1. What is your name and age?
+            const text = `1. What is your name and age?
 ${formDataObj.quiz_name || 'N/A'} - ${formDataObj.quiz_age || 'N/A'} years old
 
 2. What is your nationality?
@@ -965,15 +972,7 @@ ${formDataObj.has_agencies || 'N/A'}
 ${formDataObj.will_show_face || 'N/A'}
 
 7. Are you willing to make custom videos? (Custom videos must be completed within 24-48 hours.)
-${formDataObj.will_do_custom || 'N/A'}
-
-8. How much content have you shot so far?
-N/A (Not asked in quiz)
-
-Контакты / Contacts:
-Name (Lead Form): ${formDataObj.name || 'N/A'}
-Telegram: ${formDataObj.telegram}
-Socials: ${formDataObj.socials || 'N/A'}`;
+${formDataObj.will_do_custom || 'N/A'}`;
 
             try {
                 if (!formDataObj.photos || formDataObj.photos.length === 0) {
@@ -1024,13 +1023,14 @@ Socials: ${formDataObj.socials || 'N/A'}`;
 
         async function submitForm() {
             const nameInput = document.getElementById('name');
+            const whatsappInput = document.getElementById('whatsapp');
             const tgInput = document.getElementById('telegram');
             const errorMsg = document.getElementById('form-error');
             const submitBtn = document.getElementById('submit-btn');
             const otherSocials = document.getElementById('other-socials');
             const cookieConsent = document.getElementById('cookie-consent');
             
-            if(!nameInput.value.trim() || !tgInput.value.trim() || !cookieConsent.checked) {
+            if(!nameInput.value.trim() || !whatsappInput.value.trim() || !cookieConsent.checked) {
                 if(!cookieConsent.checked) {
                     errorMsg.textContent = translations[currentLang].error_consent;
                 } else {
@@ -1048,7 +1048,8 @@ Socials: ${formDataObj.socials || 'N/A'}`;
             
             errorMsg.classList.add('hidden');
             formData['name'] = nameInput.value;
-            formData['telegram'] = tgInput.value;
+            formData['whatsapp'] = whatsappInput.value;
+            formData['telegram'] = tgInput.value.trim() || null;
             formData['socials'] = otherSocials.value.trim() || null;
             
             if(submitBtn) {
@@ -1063,7 +1064,7 @@ Socials: ${formDataObj.socials || 'N/A'}`;
                     .insert([
                         { 
                             name: formData.quiz_name && formData.quiz_name.trim().toLowerCase() !== formData.name.trim().toLowerCase() ? formData.quiz_name + ' / ' + formData.name : formData.name,
-                            telegram: formData.telegram,
+                            telegram: formData.whatsapp + (formData.telegram ? ' | TG: ' + formData.telegram : ''),
                             socials: formData.socials || null,
                             age: formData.quiz_age || null,
                             location: formData.nationality || null,
