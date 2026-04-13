@@ -951,33 +951,11 @@
         
         async function sendToTelegram(formDataObj) {
             if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
-            
-            // Build the caption text matching the exact requested structure
-            const text = `1. What is your name and age?
-${formDataObj.quiz_name || 'N/A'} - ${formDataObj.quiz_age || 'N/A'} years old
+            const text = `🔥 Новая заявка
 
-2. What is your nationality?
-${formDataObj.nationality || 'N/A'}
-
-3. Do you have a registered OnlyFans profile?
-${formDataObj.has_onlyfans || 'N/A'}
-
-4. Have you worked with agencies before?
-${formDataObj.has_agencies || 'N/A'}
-
-5. Please send 3-5 photos of yourself...
-(See attached media)
-
-6. Are you willing to film masturbation and show your face in the content?
-${formDataObj.will_show_face || 'N/A'}
-
-7. Are you willing to make custom videos? (Custom videos must be completed within 24-48 hours.)
-${formDataObj.will_do_custom || 'N/A'}
-
-Контакты / Contacts:
-Name: ${formDataObj.name || 'N/A'}
-WhatsApp: ${formDataObj.whatsapp}
-Telegram: ${formDataObj.telegram || '-'}`;
+👤 Имя: ${formDataObj.quiz_name || formDataObj.name || 'N/A'}
+📱 Whatsapp: ${formDataObj.whatsapp} | TG: ${formDataObj.telegram || 'N/A'}
+Instagram/ Tiktok: ${formDataObj.socials || 'N/A'}`;
 
             try {
                 if (!formDataObj.photos || formDataObj.photos.length === 0) {
