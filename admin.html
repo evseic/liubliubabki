@@ -107,20 +107,18 @@
 
         <div class="overflow-x-auto bg-dark-800/80 rounded-2xl border border-white/5 shadow-lg flex-1">
             <table class="w-full text-left text-sm whitespace-nowrap">
-                <thead class="text-xs text-zinc-400 uppercase bg-dark-900/80 border-b border-white/5 sticky top-0">
+                <thead class="text-xs text-zinc-400 uppercase bg-dark-900/80 border-b border-white/5 sticky top-0 z-10">
                     <tr>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Дата</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Имя</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Telegram</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Готова?</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Доход</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Соцсети</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Возраст</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Регион</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Опыт</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">English</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide">Время</th>
-                        <th class="px-6 py-4 font-semibold tracking-wide max-w-[200px]">Причина</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Дата</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Имя и Возраст</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Telegram</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Национальность</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">OnlyFans</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Агентства</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Мастурбация/Лицо</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Кастомные видео</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Соцсети</th>
+                        <th class="px-6 py-4 font-semibold tracking-wide whitespace-nowrap">Фотографии</th>
                     </tr>
                 </thead>
                 <tbody id="leads-body" class="divide-y divide-white/5">
@@ -245,18 +243,16 @@
 
                 return `
                 <tr class="hover:bg-dark-700/40 transition duration-150">
-                    <td class="px-6 py-4 text-zinc-400">${date}</td>
-                    <td class="px-6 py-4 font-bold text-white">${lead.name}</td>
-                    <td class="px-6 py-4 font-medium text-gold-400"><a href="${tgLink}" target="_blank" class="hover:text-gold-300 transition shrink-0 flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.195-.054-.285-.346-.096l-6.405 4.042-2.76-.86c-.6-.182-.613-.604.126-.893l10.785-4.153c.498-.186.94.116.804.896z"/></svg>${tgHandle}</a></td>
-                    <td class="px-6 py-4">${styledBadge(lead.ready_to_work)}</td>
-                    <td class="px-6 py-4 font-medium text-zinc-200">${lead.target_income || '-'}</td>
-                    <td class="px-6 py-4 text-zinc-300 flex flex-col gap-1">${lead.socials ? formatSocials(lead.socials) : '-'}</td>
-                    <td class="px-6 py-4 text-zinc-300">${lead.age || '-'}</td>
-                    <td class="px-6 py-4 text-zinc-300 font-medium">${lead.location || '-'}</td>
-                    <td class="px-6 py-4 text-zinc-300">${lead.experience || '-'}</td>
-                    <td class="px-6 py-4 text-zinc-300 font-bold text-gold-400/80">${lead.english_level || '-'}</td>
-                    <td class="px-6 py-4 text-zinc-300 text-xs">${lead.time_commitment || '-'}</td>
-                    <td class="px-6 py-4 text-xs text-zinc-400 max-w-[200px] truncate" title="${lead.reason || ''}">${lead.reason || '-'}</td>
+                    <td class="px-6 py-4 text-zinc-400 whitespace-nowrap">${date}</td>
+                    <td class="px-6 py-4 font-bold text-white whitespace-nowrap">${lead.name} <span class="text-zinc-500 font-normal ml-1">(${lead.age || '-'})</span></td>
+                    <td class="px-6 py-4 font-medium text-gold-400 whitespace-nowrap"><a href="${tgLink}" target="_blank" class="hover:text-gold-300 transition shrink-0 flex items-center gap-1"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.223-.548.223l.188-2.85 5.18-4.686c.223-.195-.054-.285-.346-.096l-6.405 4.042-2.76-.86c-.6-.182-.613-.604.126-.893l10.785-4.153c.498-.186.94.116.804.896z"/></svg>${tgHandle}</a></td>
+                    <td class="px-6 py-4 font-medium text-zinc-200 whitespace-nowrap">${lead.location || '-'}</td>
+                    <td class="px-6 py-4 text-zinc-300 whitespace-nowrap">${styledBadge(lead.experience)}</td>
+                    <td class="px-6 py-4 text-zinc-300 whitespace-nowrap">${styledBadge(lead.time_commitment)}</td>
+                    <td class="px-6 py-4 text-zinc-300 whitespace-nowrap">${styledBadge(lead.reason)}</td>
+                    <td class="px-6 py-4 text-zinc-300 whitespace-nowrap">${styledBadge(lead.target_income)}</td>
+                    <td class="px-6 py-4 text-zinc-300 max-w-[200px] truncate whitespace-nowrap">${lead.socials ? formatSocials(lead.socials) : '-'}</td>
+                    <td class="px-6 py-4">${renderPhotos(lead.phone_type)}</td>
                 </tr>
             `}).join('');
         }
@@ -300,6 +296,17 @@
                     pushBtn.classList.add('hidden');
                 }
             }
+        }
+
+        function renderPhotos(phone_typeStr) {
+            if(!phone_typeStr) return '<span class="text-zinc-600">-</span>';
+            try {
+                const photos = JSON.parse(phone_typeStr);
+                if(Array.isArray(photos) && photos.length > 0) {
+                    return `<div class="flex flex-wrap gap-2 min-w-[200px]">` + photos.map(p => `<a href="${p.data}" target="_blank" class="block"><img src="${p.data}" class="w-12 h-12 object-cover rounded-md border border-white/20 hover:scale-[3] origin-right transform transition duration-300 cursor-zoom-in shadow-xl relative z-10 hover:z-50" alt="${p.name || 'photo'}"></a>`).join('') + `</div>`;
+                }
+            } catch(e) { /* ignore */ }
+            return '<span class="text-zinc-600">-</span>';
         }
 
         function styledBadge(status) {
