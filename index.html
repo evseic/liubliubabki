@@ -22,7 +22,7 @@
     /></noscript>
     <!-- End Meta Pixel Code -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LiubLiuBabki</title>
+    <title>OnlyScout</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
     <!-- Tailwind CSS -->
@@ -163,7 +163,7 @@
     <div id="landing-view" class="w-full min-h-screen flex flex-col bg-dark-900 view-active z-50 overflow-x-hidden relative">
         <div class="absolute top-6 right-6 z-[100] flex gap-2">
             <button onclick="switchLanguage('en')" id="lang-btn-en" class="text-xs font-bold px-3 py-1.5 rounded-full border border-gold-500 text-dark-900 bg-gold-400 transition-colors">EN</button>
-            <button onclick="switchLanguage('es')" id="lang-btn-es" class="text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 text-zinc-400 hover:text-white transition-colors cursor-pointer">ES</button>
+            <a href="https://www.onlyscout.agency/es" id="lang-btn-es" class="text-xs font-bold px-3 py-1.5 rounded-full border border-white/20 text-zinc-400 hover:text-white transition-colors cursor-pointer flex items-center justify-center decoration-transparent">ES</a>
         </div>
         
         <!-- Ambient background -->
@@ -178,7 +178,7 @@
             <div class="text-center md:text-center flex flex-col items-center gap-10 mb-16 md:mb-20">
                 <div class="w-full animate-fade-in-up">
                     <h1 data-i18n="hero_title" class="text-5xl md:text-7xl font-bold mb-8 leading-[1.1] tracking-tight">
-                        We Find You the <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-yellow-200 to-gold-500">Agency That Makes You the Most Money</span>
+                        We Find You the <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-yellow-200 to-gold-500">OnlyFans Agency That Makes You the Most Money</span>
                     </h1>
                     
                     <p data-i18n="hero_subtitle" class="text-xl md:text-2xl text-zinc-400 mb-10 leading-relaxed max-w-3xl mx-auto">
@@ -492,7 +492,7 @@
             </div>
 
             <div class="text-center mt-8 opacity-40">
-                <p class="text-xs text-zinc-500 font-medium tracking-wider">© 2026 LIUBLIUBABKI.COM</p>
+                <p class="text-xs text-zinc-500 font-medium tracking-wider">© 2026 ONLYSCOUT</p>
             </div>
         </main>
     </div>
@@ -506,7 +506,7 @@
         // i18n System
         const translations = {
             en: {
-                "hero_title": "We Find You the <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-yellow-200 to-gold-500\">Agency That Makes You the Most Money</span>",
+                "hero_title": "We Find You the <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-yellow-200 to-gold-500\">OnlyFans Agency That Makes You the Most Money</span>",
                 "hero_subtitle": "OnlyScout connects models with the top-performing agencies in the industry — for free. No guesswork, no wasted time, no bad deals.",
                 "hero_cta": "Find My Agency →",
                 "social_proof_1": "500+ models placed",
@@ -583,7 +583,7 @@
                 "btn_back": "Back to previous step"
             },
             es: {
-                "hero_title": "Te Encontramos la <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-yellow-200 to-gold-500\">Agencia Que Te Hará Ganar Más Dinero</span>",
+                "hero_title": "Te Encontramos la <span class=\"text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-yellow-200 to-gold-500\">Agencia de OnlyFans Que Te Hará Ganar Más Dinero</span>",
                 "hero_subtitle": "OnlyScout conecta a modelos con las agencias de mayor rendimiento de la industria, gratis. Sin adivinanzas, sin pérdida de tiempo, sin malos tratos.",
                 "hero_cta": "Encontrar Mi Agencia →",
                 "social_proof_1": "500+ modelos posicionadas",
@@ -989,6 +989,19 @@ ${formDataObj.will_show_face || 'N/A'}
 ${formDataObj.will_do_custom || 'N/A'}`;
 
             try {
+                // MESSAGE 1: Contacts
+                const contactText = `Новая заявка! / New Lead
+Name: ${formDataObj.name || 'N/A'}
+WhatsApp: ${formDataObj.whatsapp}
+Telegram: ${formDataObj.telegram || '-'}`;
+
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: contactText })
+                });
+
+                // MESSAGE 2: Quiz answers (and photos if exist)
                 if (!formDataObj.photos || formDataObj.photos.length === 0) {
                     await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
                         method: 'POST',
