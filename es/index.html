@@ -661,7 +661,7 @@
             }
         };
 
-        let currentLang = localStorage.getItem('onlyscout_lang') || (window.location.pathname.toLowerCase().split('/').includes('es') ? 'es' : 'en');
+        let currentLang = window.location.pathname.toLowerCase().split('/').includes('es') ? 'es' : 'en';
 
         function applyTranslations() {
             const t = translations[currentLang];
